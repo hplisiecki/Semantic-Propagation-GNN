@@ -58,7 +58,6 @@ class SPropDataset(Dataset):
         self.parser_tag_categories = parser_tag_categories # Get the parser tag categories
         self.valence_words, self.arousal_words, self.dominance_words = self.build_valence_arousal_dominance() # get the affective metrics for all words
 
-
         # Precompute and store data for each text
         self.data_list = [self.build_data(idx) for idx in range(len(self.texts))]
 
