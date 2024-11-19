@@ -132,7 +132,7 @@ activations = model.activations
 # Visualize scaling factors for the first GNN layer
 visualize_scaling_factors(data, activations, layer_index=0, save = 'plots/happy.svg')
 
-visualize_scaling_factors_simple(data, activations, layer_index=0, save = 'plots/nothappy.svg', seed = 32,
+visualize_scaling_factors_simple(data, activations, layer_index=0, save = 'plots/nothappy.png', seed = 32,
                                  title = None, x_off = 0, y_off = 0)
 
 # Valence correlation: 0.6235581067345796

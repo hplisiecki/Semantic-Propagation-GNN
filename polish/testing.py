@@ -38,7 +38,7 @@ with open(r'data/polish/parser_categories.pkl', 'rb') as f:
     parser_tag_categories = pickle.load(f)
 
 num_node_features = 3 # POS tag, Negation, Valence, Arousal, Dominance
-model = SentimentGNN(num_node_features, len(pos_tags) + 1 , len(parser_tag_categories) + 2, metric_names, dropout_prob=dropout)
+model = SPropGNN(num_node_features, len(pos_tags) + 1 , len(parser_tag_categories) + 2, metric_names, dropout_prob=dropout)
 
 # load
 SAVE_DIR = r'D:\GitHub\bias_free_modeling\models\polish_golden'
