@@ -1,0 +1,91 @@
+import sys
+sys.path.append(r'D:\GitHub\bias_free_modeling')
+
+from discrete.model import SPropGNN
+from discrete.dataset import SPropDataset
+from discrete.utils import load_data
+from torch_geometric.loader import DataLoader
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from discrete.training_loop import train_model
+import os
+import pickle
+import wandb
+# add to path
+
+def main():
+
+    sweep_configuration = {
+        "name": "gnn_sweep_final",
+        "entity": 'hubertp',
+        "metric": {"name": "best_val_loss", "goal": "minimize"},
+        "method": "bayes",
+        "parameters": {"dropout": {"values": [0, 0.2, 0.4, 0.6]},
+                       "learning_rate": {"values": [5e-3, 5e-4, 5e-5]},
+                       "weight_decay": {"values": [0.0, 0.2, 0.4, 0.6]}}
+    }
+
+    sweep_id = wandb.sweep(sweep_configuration, project="bias_free_modeling_english_discrete")
+
+    train, test, val = load_data()
+
+    redo = False
+    if os.path.exists(r'D:\GitHub\bias_free_modeling\data\discrete/discrete/train_hierarchical.pt') and redo == False:
+        train_dataset = torch.load(r'D:\GitHub\bias_free_modeling\data\discrete/train_hierarchical.pt')
+        val_dataset = torch.load(r'D:\GitHub\bias_free_modeling\data\discrete/val_hierarchical.pt')
+    else:
+        train_dataset, val_dataset = SPropDataset(train), SPropDataset(val)
+        # save datasets
+        torch.save(train_dataset, r'D:\GitHub\bias_free_modeling\data\discrete/train_hierarchical.pt')
+        torch.save(val_dataset, r'D:\GitHub\bias_free_modeling\data\discrete/val_hierarchical.pt')
+
+    batch = 400
+
+    epochs = 200
+
+    train_dataloader = DataLoader(train_dataset, batch_size=batch, shuffle=True)
+    val_dataloader = DataLoader(val_dataset, batch_size=batch, shuffle=True)
+
+    with open(r'D:\GitHub\bias_free_modeling\data/english/pos_tags.pkl', 'rb') as f:
+        pos_tags = pickle.load(f)
+
+    with open(r'D:\GitHub\bias_free_modeling\data/polish/parser_categories.pkl', 'rb') as f:
+        parser_tag_categories = pickle.load(f)
+
+    with open(r'D:\GitHub\bias_free_modeling\data/discrete/label_map.pkl', 'rb') as f:
+        label_map = pickle.load(f)
+
+    def train(config=None):
+        with wandb.init(config=config):
+            config = wandb.config
+            torch.cuda.empty_cache()
+
+            num_node_features = 9  # emotions and sentence location
+
+
+            model = SPropGNN(num_node_features, len(pos_tags) + 1, len(parser_tag_categories) + 2, len(label_map),
+                                 dropout_prob=config.dropout)
+
+            optimizer = optim.AdamW(model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay)
+
+            device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+            criterion = nn.CrossEntropyLoss()
+
+            model = model.to(device)
+            criterion = criterion.to(device)
+
+
+            train_model(model, optimizer, criterion, train_dataloader, val_dataloader, epochs, device,
+                        save_dir = None, use_wandb = True)
+
+
+            del model, criterion
+
+
+    wandb.agent(sweep_id, train, count=20)
+
+if __name__ == '__main__':
+    main()
+
+
