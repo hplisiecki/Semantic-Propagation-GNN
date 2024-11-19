@@ -1,8 +1,9 @@
 # Semantic Propagation GNN - Bias Free Sentiment Analysis
 
-This repository houses the code along with detailed comments, used to generate the results for the "Bias Free Sentiment  
-Analysis" paper. It proposes a new GNN architecture designed to propagate word-level emotion information throughout  
-sentence syntactic graphs.
+This repository houses the code along with detailed comments, used to generate the results for the "Bias Free Sentiment Analysis" paper. It proposes a new GNN architecture designed to propagate word-level emotion information throughout sentence syntactic graphs.
+
+![PLOT](plots/not_happy.svg "Explainability Example")
+
 
 ## File Structure
 1. `data/` - Contains the dataset files.
