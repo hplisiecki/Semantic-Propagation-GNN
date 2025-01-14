@@ -20,8 +20,6 @@ This repository houses the code along with detailed comments, used to generate t
 The models generated with this code are available at:
 https://drive.google.com/drive/folders/1siJGWwUJjWdI9P1Qhhj6UuwRYUKGkApV?usp=sharing
 
-The  repository will be further refined in the upcoming weeks.
-
 ---
 
 Disclaimer: you might need to regenerate some of the dataset files before being able to rerun the code as I've  
