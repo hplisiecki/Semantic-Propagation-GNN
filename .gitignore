@@ -172,3 +172,5 @@ polish/wandb
 /polish/wandb
 /models
 /english_explainable
+/data/hatespeech
+/hatespeech
