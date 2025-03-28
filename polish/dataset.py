@@ -232,11 +232,11 @@ class SPropDataset(Dataset):
 
 # DEBUGGING CODE / EXAMPLE USAGE:
 
-# import pandas as pd
-# df = pd.DataFrame({'text': ['Kaczyński, Tusk, Biedroń, Macierewicz', 'This is another test sentence. This is another test sentence.'], \
-#                           'norm_Valence_M' : [0.5, 0.6], 'norm_Arousal_M' : [0.7, 0.8], 'norm_Dominance_M' : [0.9, 0.1]})
-#
-# data = SPropDataset(df)
+import pandas as pd
+df = pd.DataFrame({'text': ['Kaczyński, Tusk, Biedroń, Macierewicz', 'This is another test sentence. This is another test sentence.'], \
+                          'norm_Valence_M' : [0.5, 0.6], 'norm_Arousal_M' : [0.7, 0.8], 'norm_Dominance_M' : [0.9, 0.1]})
+
+data = SPropDataset(df)
 
 # from polish_hierarchical.utils import load_data
 # train, test, val = load_data()
